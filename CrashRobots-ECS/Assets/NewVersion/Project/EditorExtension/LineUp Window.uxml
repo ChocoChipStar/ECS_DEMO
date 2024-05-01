@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/NewVersion/Project/EditorExtension/LineUp%20Window.uss?fileID=7433441132597879392&amp;guid=3282b8a23eafd524f91cba17ff5c5a62&amp;type=3#LineUp Window" />
+    <ui:Label tabindex="-1" text="FirstPhase-EnemyPrefabs" parse-escape-sequences="true" display-tooltip-when-elided="true" name="FirstPhase-EnemyPrefabs" tooltip="a" focusable="false" />
+    <uie:ObjectField label="BaseObject" name="BaseObject" type="UnityEngine.GameObject, UnityEngine.CoreModule" style="opacity: 1; height: auto;" />
+    <ui:Label tabindex="-1" text="FirstPhase Copy" parse-escape-sequences="true" display-tooltip-when-elided="true" name="FirstPhase-Copy" />
+    <uie:ObjectField label="Base CopiedObject 1" name="Base-CopiedObject-1" type="UnityEngine.GameObject, UnityEngine.CoreModule" style="height: auto;" />
+    <uie:ObjectField label="Base CopiedObject 2" name="Base-CopiedObject-2" type="UnityEngine.GameObject, UnityEngine.CoreModule" style="height: auto; left: auto; top: auto; right: auto; bottom: auto; position: relative;" />
+    <uie:ObjectField label="Base CopiedObject 3" name="Base-CopiedObject-3" type="UnityEngine.GameObject, UnityEngine.CoreModule" style="height: auto; align-items: stretch; flex-direction: row; align-self: stretch; justify-content: flex-start;" />
+    <ui:Button text="コピーを実行" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Copied-Button" />
+</ui:UXML>
