@@ -14,20 +14,23 @@ public class CameraSystem_V2 : MonoBehaviour
     private float cameraAngle;
 
     [SerializeField]
-    private Camera mainCamera;
+    public Camera mainCamera;
 
     private float ALLOWABLE_LIMIT = 15.0f;
 
     private void Update()
     {
-        var currentPos = mainCamera.transform.position;
-        var currentRot = mainCamera.transform.eulerAngles;
+        var instancePos = PlayerData.Instance.transform.position;
+        var playerPos = new Vector2(instancePos.x, instancePos.z);
+        var cameraPos = new Vector2(mainCamera.transform.position.x, mainCamera.transform.position.z);
 
-        currentPos = new Vector3(0.0f, cameraPosY, 0.0f);
-        currentRot.x = cameraAngle;
+        var distance = playerPos - cameraPos;
+        var radian = Mathf.Atan2(distance.y, distance.x);
+        var degree = radian * Mathf.Rad2Deg;
 
-        mainCamera.transform.position = currentPos;
-        mainCamera.transform.eulerAngles = currentRot;
+        var cameraRot = mainCamera.transform.eulerAngles;
+        cameraRot.y = -degree + 90.0f;
+        mainCamera.transform.eulerAngles = cameraRot;
     }
 
     /// <summary>

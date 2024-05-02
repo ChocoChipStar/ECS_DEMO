@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class PlayerCollisionManager_V2 : MonoBehaviour
 {
-    [SerializeField, Header("�n�ʂ̃^�O��")]
-    string groundTagName;
+    [SerializeField]
+    private string groundTagName;
 
-    [SerializeField, Header("Enemy�^�O��")]
-    string enemyTagName;
+    [SerializeField]
+    private string enemyTagName;
 
-    [SerializeField, Header("�󂹂Ȃ��u���b�N�̃^�O��")]
-    string unbreakableTagName;
+    [SerializeField]
+    private string unbreakableTagName;
 
     [Tooltip("�f�[�^�}�l�[�W���[�̃C���X�^���X")]
     private PlayerDataManager_V2 playerData;

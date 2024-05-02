@@ -8,41 +8,37 @@ using PlayerScript = PlayerScriptManager_V2;
 public class MoveSystem_V2 : MonoBehaviour
 {
     [SerializeField, Header("プレイヤーの移動速度")]
-    private float baseSpeed;
+    private float baseSpeed = 0.0f;
 
     [Tooltip("現在の移動速度")]
     private float currentSpeed;
     public float CurrentSpeed { get { return currentSpeed; } private set { currentSpeed = value; } }
 
     [SerializeField, Header("プレイヤーの最大移動速度")]
-    private float baseMaxSpeed;
+    private float baseMaxSpeed = 0.0f;
 
     [Tooltip("現在のプレイヤー最高速度")]
-    private float maxCurrentSpeed;
+    private float maxCurrentSpeed = 0.0f;
     public float MaxCurrentSpeed { get { return maxCurrentSpeed; } private set { maxCurrentSpeed = value; } }
 
     [SerializeField, Header("ブレーキ抗力値")]
-    private float breakValue;
+    private float breakValue = 0.0f;
 
-    [Tooltip("1フレーム前のプレイヤー座標の値を代入")]
-    private Vector3 lastPosition = Vector3.zero;
+    [SerializeField]
+    private Camera mainCamera = null;
 
-    [Tooltip("データマネージャーのインスタンス取得")]
+    private float layerDistance = 100.0f;
+
     private PlayerData playerData = null;
-    [Tooltip("スクリプトマネージャーのインスタンス取得")]
     private PlayerScript playerScript = null;
 
-    [Tooltip("反射処理実行判定 true->実行 false->非実行")]
     private bool isReflect = false;
-    [Tooltip("反射ベクトルの値を代入")]
+
+    private Vector3 lastPosition = Vector3.zero;
     private Vector3 reflectionDirection = Vector3.zero;
 
     private RaycastHit rayHit;
 
-    [Tooltip("レイヤー射出距離値")]
-    private float layerDistance = 100.0f;
-
-    [Tooltip("不可懐レイヤー番号")]
     private const int UNBREAKABLE_LAYER_NUMBER = 12;
 
 
@@ -57,9 +53,9 @@ public class MoveSystem_V2 : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ReflectSystem(null);
+        ReflectSystem();
 
-        MovementBorderSystem();
+        // MovementBorderSystem();
 
         if (PlayerScript.Instance.AttackSystem.IsAttack)
             return;
@@ -87,16 +83,16 @@ public class MoveSystem_V2 : MonoBehaviour
             return;
 
         if (keyCurrent.wKey.isPressed || keyCurrent.upArrowKey.isPressed)
-            playerData.RigidBody.AddForce(0.0f, 0.0f, CurrentSpeed,ForceMode.Impulse);
+            playerData.RigidBody.AddForce(mainCamera.transform.forward * CurrentSpeed,ForceMode.Impulse);
 
         if (keyCurrent.sKey.isPressed || keyCurrent.downArrowKey.isPressed)
-            playerData.RigidBody.AddForce(0.0f,0.0f, -CurrentSpeed,ForceMode.Impulse);
+            playerData.RigidBody.AddForce(mainCamera.transform.forward * -CurrentSpeed,ForceMode.Impulse);
 
         if (keyCurrent.aKey.isPressed || keyCurrent.leftArrowKey.isPressed)
-            playerData.RigidBody.AddForce(-CurrentSpeed, 0.0f, 0.0f, ForceMode.Impulse);
+            playerData.RigidBody.AddForce(mainCamera.transform.right * -CurrentSpeed, ForceMode.Impulse);
 
         if (keyCurrent.dKey.isPressed || keyCurrent.rightArrowKey.isPressed)
-            playerData.RigidBody.AddForce(CurrentSpeed, 0.0f, 0.0f,ForceMode.Impulse);
+            playerData.RigidBody.AddForce(mainCamera.transform.right * CurrentSpeed,ForceMode.Impulse);
     }
 
     /// <summary>
@@ -200,7 +196,7 @@ public class MoveSystem_V2 : MonoBehaviour
     /// 攻撃が弾かれた後の移動処理を行います
     /// </summary>
     /// <param name="targetObj">プレイヤーに衝突した不可壊オブジェクトを代入</param>
-    public void ReflectSystem(GameObject? targetObj)
+    public void ReflectSystem(GameObject? targetObj = null)
     {
         if(!playerScript.AttackSystem.IsAttack)
             isReflect = false;

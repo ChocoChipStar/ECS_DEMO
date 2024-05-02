@@ -21,7 +21,7 @@ public class EnergySystem_V2 : MonoBehaviour
     private const float CONSUME_ATTACK_VALUE = 10.0f;
 
     private const float RESTORE_TIME = 1.0f;
-    private const float ONE_RESTORE_VALUE = 5.0f;
+    private const float ONE_RESTORE_VALUE = 10.0f;
     private const float CHARGE_PERCANTAGE = 33.3f;
 
     private PlayerDataManager_V2 playerData;
