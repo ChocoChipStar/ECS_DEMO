@@ -8,8 +8,6 @@ public class EnemyAuthoring : MonoBehaviour
 
     public float attackDamage;
     public float attackRange;
-
-    public float3 lastFramePosition;
 }
 
 public class EnemyBake : Baker<EnemyAuthoring>
