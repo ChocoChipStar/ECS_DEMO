@@ -41,7 +41,7 @@ public partial struct EnemySpawnSystem : ISystem
 
                 if (maxRadius > xAbs + zAbs && xAbs + zAbs > minRadius)
                 {
-                    randomPos = new Vector3(x, 0.0f, z) + PlayerDataManager_V2.Instance.transform.position;
+                    randomPos = new Vector3(x, 5.0f, z) /*+ PlayerDataManager_V2.Instance.transform.position*/;
                     break;
                 }
             }
@@ -50,7 +50,7 @@ public partial struct EnemySpawnSystem : ISystem
 
             transform.ValueRW = LocalTransform.FromPositionRotation
             (
-                new Vector3(randomPos.x, 0, randomPos.z),transform.ValueRO.Rotation
+                randomPos, transform.ValueRO.Rotation
             );
         }
 
