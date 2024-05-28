@@ -1,9 +1,11 @@
+using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
 public class ConfigAuthoring : MonoBehaviour
 {
-    public GameObject enemyPrefab = null;
+    public GameObject enemyPrefab;
     public int maxCount = 100;
 
     public int maxSpawnRadius;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Test : MonoBehaviour
+public class Test1 : MonoBehaviour
 {
     [SerializeField]
     private Rigidbody rigidBody;

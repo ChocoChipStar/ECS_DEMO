@@ -1,3 +1,4 @@
+using System;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -29,5 +30,5 @@ public struct ParamsData : IComponentData
     public float MoveSpeed;
 
     public float AttackDamage;
-    public float AttackRange;   
+    public float AttackRange;
 }

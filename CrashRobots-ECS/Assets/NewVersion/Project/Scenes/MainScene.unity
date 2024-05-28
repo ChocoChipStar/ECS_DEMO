@@ -876,7 +876,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1024122876}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1044068321
+--- !u!1 &1069899856
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -884,8 +884,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1044068323}
-  - component: {fileID: 1044068322}
+  - component: {fileID: 1069899858}
+  - component: {fileID: 1069899857}
   m_Layer: 0
   m_Name: SubScene
   m_TagString: Untagged
@@ -893,13 +893,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1044068322
+--- !u!114 &1069899857
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1044068321}
+  m_GameObject: {fileID: 1069899856}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45a335734b1572644a6a5d09d87adc65, type: 3}
@@ -914,13 +914,13 @@ MonoBehaviour:
       y: 1113235916
       z: 3115037315
       w: 427656436
---- !u!4 &1044068323
+--- !u!4 &1069899858
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1044068321}
+  m_GameObject: {fileID: 1069899856}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -1267,6 +1267,10 @@ PrefabInstance:
     - target: {fileID: 8297008077783004105, guid: 341fd79d28ba8974eb72b328c2981d55, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8608648942906465457, guid: 341fd79d28ba8974eb72b328c2981d55, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8730474259103133957, guid: 341fd79d28ba8974eb72b328c2981d55, type: 3}
       propertyPath: m_Name
@@ -2884,4 +2888,4 @@ SceneRoots:
   - {fileID: 1761522774}
   - {fileID: 2073521511521365326}
   - {fileID: 322597860}
-  - {fileID: 1044068323}
+  - {fileID: 1069899858}
