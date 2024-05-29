@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -18,7 +16,7 @@ public class ConfigBake : Baker<ConfigAuthoring>
     {
         var data = new ConfigData
         {
-            EnemyPrefab = GetEntity(authoring.enemyPrefab,TransformUsageFlags.Dynamic),
+            EnemyPrefab = GetEntity(authoring.enemyPrefab, TransformUsageFlags.Dynamic),
             MaxCount = authoring.maxCount,
             MaxSpawnRadius = authoring.maxSpawnRadius,
             MinSpawnRadius = authoring.minSpawnRadius,

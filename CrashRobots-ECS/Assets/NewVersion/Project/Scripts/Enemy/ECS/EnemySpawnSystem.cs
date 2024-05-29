@@ -9,6 +9,8 @@ using UnityEngine;
 [UpdateInGroup(typeof(InitializationSystemGroup))]
 public partial struct EnemySpawnSystem : ISystem
 {
+    public Entity[] instanceEntity;
+
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<ConfigData>();
@@ -32,15 +34,6 @@ public partial struct EnemySpawnSystem : ISystem
 
         foreach (var entity in instance)
         {
-#if UNITY_EDITOR // EntitiesHierarchyにEnemyIDという名前でバッファを表示
-            state.EntityManager.SetName(entity, "Enemy" + enemyNumber);
-#endif
-
-            state.EntityManager.AddBuffer<EnemyBufferElement>(entity);
-            DynamicBuffer<EnemyBufferElement> buffer = state.EntityManager.GetBuffer<EnemyBufferElement>(entity);
-            buffer.Add(new EnemyBufferElement() { EnemyID = enemyNumber, Enemy = entity });
-            ++enemyNumber;
-
             // 中心点プレイヤー座標から円状にランダム配置
             for (int j = 0; j < 100; ++j)
             {
@@ -62,6 +55,21 @@ public partial struct EnemySpawnSystem : ISystem
             (
                 randomPos, transform.ValueRO.Rotation
             );
+        }
+
+        // BufferEntityに対してEnemyのDynamicBufferを追加
+        var bufferEntity = state.EntityManager.CreateEntity();
+        state.EntityManager.AddBuffer<EnemyBufferElement>(bufferEntity);
+        DynamicBuffer<EnemyBufferElement> enemyBuffer = state.EntityManager.GetBuffer<EnemyBufferElement>(bufferEntity);
+
+        foreach (var entity in instance)
+        {
+#if UNITY_EDITOR
+            state.EntityManager.SetName(entity, "Enemy" + enemyNumber);
+#endif
+
+            enemyBuffer.Add(new EnemyBufferElement { Enemy = entity, EnemyID = enemyNumber });
+            enemyNumber++;
         }
 
         state.Enabled = false;
