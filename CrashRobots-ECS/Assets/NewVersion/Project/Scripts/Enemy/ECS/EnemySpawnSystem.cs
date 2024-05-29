@@ -7,16 +7,16 @@ using UnityEngine;
 
 
 [UpdateInGroup(typeof(InitializationSystemGroup))]
-public partial struct EnemySpawnSystem : ISystem
+public partial class EnemySpawnSystem : SystemBase
 {
-    public Entity[] instanceEntity;
+    public Entity instanceEntity;
 
-    public void OnCreate(ref SystemState state)
+    protected override void OnCreate()
     {
         state.RequireForUpdate<ConfigData>();
     }
 
-    public void OnUpdate(ref SystemState state)
+    protected override void OnUpdate()
     {
         var config = SystemAPI.GetSingleton<ConfigData>();
 
