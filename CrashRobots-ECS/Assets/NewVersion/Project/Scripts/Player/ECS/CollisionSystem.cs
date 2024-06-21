@@ -1,51 +1,71 @@
+using Unity.Burst;
 using Unity.Entities;
-using Unity.Entities.UniversalDelegates;
-using Unity.Transforms;
-using UnityEngine;
-using UnityEngine.InputSystem;
+using Unity.Jobs;
+using Unity.Physics;
+using Unity.Physics.Systems;
 
+[UpdateInGroup(typeof(AfterPhysicsSystemGroup))]
 public partial struct CollisionSystem : ISystem
 {
-    private Entity bufferEntity;
-
     public void OnCreate(ref SystemState state)
     {
-        var query = state.EntityManager.CreateEntityQuery(typeof(EnemyBufferElement));
-        bufferEntity = query.GetSingletonEntity();
+        state.RequireForUpdate<PlayerParamsData>();
+        state.RequireForUpdate<EnemyParamsData>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        DynamicBuffer<EnemyBufferElement> buffer = state.EntityManager.GetBuffer<EnemyBufferElement>(bufferEntity);
-        var playerPos = PlayerDataManager_V2.Instance.transform.position;
-        var playerRadius = 1.0f;
+        var simulation = SystemAPI.GetSingleton<SimulationSingleton>();
+        var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
 
-        foreach(var enemyBufferElement in buffer)
+        var enemiesJob = new EnemiesJob
         {
-            var entity = enemyBufferElement.Enemy;
-            var enemyPos = SystemAPI.GetComponentRW<LocalTransform>(entity).ValueRO.Position;
-            var enemyRadius = enemyBufferElement.CollisionRadius;
+            bulletsGroup = SystemAPI.GetComponentLookup<BulletParamsData>(),
+            enemyGroup = SystemAPI.GetComponentLookup<EnemyParamsData>(),
+            entityCommandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged)
+        };
+        state.Dependency = enemiesJob.Schedule(simulation, state.Dependency);
 
-            var x = (playerPos.x - enemyPos.x) * (playerPos.x - enemyPos.x);
-            var z = (playerPos.z - enemyPos.z) * (playerPos.z - enemyPos.z);
-            var radius = (playerRadius + enemyRadius) * (playerRadius + enemyRadius);
+        JobHandle.ScheduleBatchedJobs();
+    }
 
-            if (Keyboard.current.uKey.wasPressedThisFrame)
-            {
-                state.EntityManager.DestroyEntity(entity);
-            }
-        }
+    [BurstCompile]
+    private struct EnemiesJob : ITriggerEventsJob
+    {
+        public ComponentLookup<BulletParamsData> bulletsGroup;
+        public ComponentLookup<EnemyParamsData> enemyGroup;
 
-        foreach (var (paramsData,transform) in SystemAPI.Query<RefRO<ParamsData>,RefRW<LocalTransform>>())
+        public EntityCommandBuffer entityCommandBuffer;
+
+        [BurstCompile]
+        public void Execute(TriggerEvent triggerEvent)
         {
-            var pos = transform.ValueRO.Position;
+            // EntityAとBには衝突した二つのエンティティが格納されている
+            // ※推測 EntityAは当たった対象物 EntityBは当たった自分自身
 
-            if(Keyboard.current.spaceKey.wasPressedThisFrame)
-            {
-                pos = Vector3.zero;
-            }
+            var aIsEnemy = enemyGroup.HasComponent(triggerEvent.EntityA);
+            var bIsEnemy = enemyGroup.HasComponent(triggerEvent.EntityB);
 
-            transform.ValueRW.Position = pos;
+            // AとBどちらもがエネミーではない場合リターンする
+            if (!(aIsEnemy ^ bIsEnemy))
+                return;
+
+            var aIsBullets = bulletsGroup.HasComponent(triggerEvent.EntityA);
+            var bIsBullets = bulletsGroup.HasComponent(triggerEvent.EntityB);
+
+            // AとBどちらもが弾ではない場合リターンする
+            if (!(aIsBullets ^ bIsBullets))
+                return;
+
+            // EntityAがエネミーの場合、enemyEntityにEntityAを代入する
+            var enemyEntity = aIsEnemy ? triggerEvent.EntityA : triggerEvent.EntityB;
+            var bulletEntity = bIsBullets ? triggerEvent.EntityB : triggerEvent.EntityA;
+
+            // DisabledまたはDestroyを使う。
+            // 一度に非表示にする方法が見つからない為、再帰処理のDisabledよりDestroyの方が軽い
+            entityCommandBuffer.DestroyEntity(enemyEntity);
+            entityCommandBuffer.AddComponent<Disabled>(bulletEntity);
         }
     }
 }
