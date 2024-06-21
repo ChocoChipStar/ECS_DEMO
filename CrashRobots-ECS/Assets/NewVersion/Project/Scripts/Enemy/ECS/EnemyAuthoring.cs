@@ -7,28 +7,20 @@ public class EnemyAuthoring : MonoBehaviour
 {
     public float moveSpeed;
 
-    public float attackDamage;
-    public float attackRange;
-}
-
-public class EnemyBake : Baker<EnemyAuthoring>
-{
-    public override void Bake(EnemyAuthoring authoring)
+    private class Baker : Baker<EnemyAuthoring>
     {
-        var paramsData = new ParamsData
+        public override void Bake(EnemyAuthoring authoring)
         {
-            MoveSpeed = authoring.moveSpeed,
-            AttackDamage = authoring.attackDamage,
-            AttackRange = authoring.attackRange,
-        };
-        AddComponent(GetEntity(TransformUsageFlags.None), paramsData);
+            var paramsData = new EnemyParamsData
+            {
+                MoveSpeed = authoring.moveSpeed,
+            };
+            AddComponent(GetEntity(TransformUsageFlags.Dynamic), paramsData);
+        }
     }
 }
 
-public struct ParamsData : IComponentData
+public struct EnemyParamsData : IComponentData
 {
     public float MoveSpeed;
-
-    public float AttackDamage;
-    public float AttackRange;
 }
