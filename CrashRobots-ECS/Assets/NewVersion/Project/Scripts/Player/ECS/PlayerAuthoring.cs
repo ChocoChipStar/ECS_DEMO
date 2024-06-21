@@ -1,18 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Entities;
 using UnityEngine;
 
-public class PlayerCollisionAuthoring : MonoBehaviour
+public class PlayerAuthoring : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float rotationSpeed;
 
-    // Update is called once per frame
-    void Update()
+    class Baker : Baker<PlayerAuthoring>
     {
-        
+        public override void Bake(PlayerAuthoring authoring)
+        {
+            var data = new PlayerParamsData()
+            {
+                rotationSpeed = authoring.rotationSpeed
+            };
+            AddComponent(GetEntity(TransformUsageFlags.Dynamic), data);
+        }
     }
+}
+
+public struct PlayerParamsData : IComponentData
+{
+    public float rotationSpeed;
+    public float horizontal;
+    public bool isPressedSpace;
 }
