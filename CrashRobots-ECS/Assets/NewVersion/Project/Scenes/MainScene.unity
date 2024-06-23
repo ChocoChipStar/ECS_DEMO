@@ -400,7 +400,6 @@ GameObject:
   - component: {fileID: 1153470121}
   - component: {fileID: 1153470120}
   - component: {fileID: 1153470123}
-  - component: {fileID: 1153470124}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -526,26 +525,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!114 &1153470124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153470119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ed720a8d91c4ac43abb8349e7825139, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 0}
-  PlayerAttackSE: []
-  PlayerSpinAttackSE: []
-  PlayerDamagedSE:
-  - {fileID: 8300000, guid: 25b9bbb5df10baa40b4730ce2603174b, type: 3}
-  EnemyTackleSE: []
-  EnemySpinAttackSE: []
-  EnemyDamagedSE: []
 --- !u!1 &1439753820
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,5 +919,5 @@ SceneRoots:
   - {fileID: 1153470122}
   - {fileID: 1439753822}
   - {fileID: 1920717811}
-  - {fileID: 1069899858}
   - {fileID: 288288241}
+  - {fileID: 1069899858}
