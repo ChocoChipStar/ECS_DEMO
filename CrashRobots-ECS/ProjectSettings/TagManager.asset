@@ -18,18 +18,18 @@ TagManager:
   - 
   - Water
   - UI
-  - Hammer
-  - TrashOrigin
-  - TrashDivision
-  - Scrap
-  - CanBreak
+  - Player
   - Enemy
-  - Unbreak
-  - 
-  - 
-  - PlayerEntity
-  - EnemyEntity
   - Ground
+  - Bullet
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
