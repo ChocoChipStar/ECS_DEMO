@@ -1,11 +1,11 @@
 using System;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-[UpdateInGroup(typeof(InitializationSystemGroup))] // 誰よりも早くアップデートを実行する
 [UpdateAfter(typeof(TitleConfigDataSystem))] // ConfigDataを取得してからアップデート実行
 public partial struct EnemySpawnSystem : ISystem
 {
@@ -25,9 +25,14 @@ public partial struct EnemySpawnSystem : ISystem
 
     private void OnCreate(ref SystemState state)
     {
-        state.Enabled = true;
         state.RequireForUpdate<SpawnConfigData>();
         state.RequireForUpdate<TitleConfigData>();
+    }
+
+    private void OnStartRunning(ref SystemState state)
+    {
+        var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
+        entityCommandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
     }
 
     [BurstCompile]
@@ -63,15 +68,45 @@ public partial struct EnemySpawnSystem : ISystem
         }
         measureTime = 0.0f;
 
-        EnemySpawner(state);
+        SearchDisabledEnemy(state);
+        //EnemySpawner(state);
+
+        var spawnJob = new EnemySpawnJob
+        {
+
+        };
+        state.Dependency = spawnJob.Schedule(state.Dependency);
+        JobHandle.ScheduleBatchedJobs();
+    }
+
+    private partial struct EnemySpawnJob : IJobEntity
+    {
+        private void Execute()
+        {
+            if (!enemyBuffer.IsEmpty)
+            {
+                PoolingEnemy(state);
+                return;
+            }
+
+            var instance = state.EntityManager.Instantiate(spawnData.enemyPrefab);
+
+            var transform = SystemAPI.GetComponentRW<LocalTransform>(instance);
+            var enemyData = SystemAPI.GetComponentRW<EnemyParamsData>(instance);
+
+            transform.ValueRW.Position = CalculateSpawnPosition();
+            var randomSpeed = UnityEngine.Random.Range(enemyData.ValueRO.moveMinSpeed, enemyData.ValueRO.moveMaxSpeed);
+            enemyData.ValueRW.moveSpeed = randomSpeed;
+        }
     }
 
     /// <summary> SpawnLoopがオフの場合に一度のみ実行する生成処理 </summary>
+    [BurstCompile]
     public SystemState InitializeSpawn(SystemState state)
     {
         if (!titleData.isSpawnLoop)
         {
-            for (int i = 0; i < 5000; ++i)
+            for (int i = 0; i < titleData.spawnCount; ++i)
             {
                 EnemySpawner(state);
             }
@@ -84,24 +119,10 @@ public partial struct EnemySpawnSystem : ISystem
     }
 
     /// <summary> 敵を生成し座標の設定を行います </summary>
+    [BurstCompile]
     private void EnemySpawner(SystemState state)
     {
-        SearchDisabledEnemy(state);
 
-        if (!enemyBuffer.IsEmpty)
-        {
-            PoolingEnemy(state);
-            return;
-        }
-
-        var instance = state.EntityManager.Instantiate(spawnData.enemyPrefab);
-
-        var transform = SystemAPI.GetComponentRW<LocalTransform>(instance);
-        var enemyData = SystemAPI.GetComponentRW<EnemyParamsData>(instance);
-        
-        transform.ValueRW.Position = CalculateSpawnPosition();
-        var randomSpeed = UnityEngine.Random.Range(enemyData.ValueRO.moveMinSpeed, enemyData.ValueRO.moveMaxSpeed);
-        enemyData.ValueRW.moveSpeed = randomSpeed;
     }
 
     /// <summary> 非アクティブ状態のエネミーを再アクティブ化して初期化します </summary>

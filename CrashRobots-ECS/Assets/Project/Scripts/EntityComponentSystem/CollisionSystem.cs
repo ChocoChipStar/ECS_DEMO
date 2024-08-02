@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -21,7 +20,7 @@ public partial struct CollisionSystem : ISystem
         var simulation = SystemAPI.GetSingleton<SimulationSingleton>();
         var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
 
-        var enemiesJob = new EnemiesJob
+        var collisionJob = new CollisionJob
         {
             playerGroup = SystemAPI.GetComponentLookup<PlayerParamsData>(),
             playerData = SystemAPI.GetSingleton<PlayerParamsData>(),
@@ -29,13 +28,13 @@ public partial struct CollisionSystem : ISystem
             enemyGroup = SystemAPI.GetComponentLookup<EnemyParamsData>(),
             entityCommandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged)
         };
-        state.Dependency = enemiesJob.Schedule(simulation, state.Dependency);
+        state.Dependency = collisionJob.Schedule(simulation, state.Dependency);
 
         JobHandle.ScheduleBatchedJobs();
     }
 
     [BurstCompile]
-    private struct EnemiesJob : ITriggerEventsJob
+    private struct CollisionJob : ITriggerEventsJob
     {
         [ReadOnly] public ComponentLookup<PlayerParamsData> playerGroup;
         public ComponentLookup<BulletParamsData> bulletsGroup;
