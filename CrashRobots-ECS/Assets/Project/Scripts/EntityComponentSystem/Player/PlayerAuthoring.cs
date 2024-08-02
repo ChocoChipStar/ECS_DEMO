@@ -5,6 +5,7 @@ public class PlayerAuthoring : MonoBehaviour
 {
     [SerializeField]
     private int health;
+
     [SerializeField]
     private float rotationSpeed;
 
@@ -25,16 +26,15 @@ public class PlayerAuthoring : MonoBehaviour
 public struct PlayerParamsData : IComponentData
 {
     public int health;
+    
     public float rotationSpeed;
     public float horizontal;
+    
     public bool isPressedSpace;
-
-    private const int DamageValue = 1;
 
     public void TakenDamage()
     {
-        health += -DamageValue;
-        
+        health--;
     }
 
     public void SetHealthText()
