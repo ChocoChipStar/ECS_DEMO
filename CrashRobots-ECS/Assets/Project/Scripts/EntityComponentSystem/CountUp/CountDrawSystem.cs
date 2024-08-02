@@ -23,6 +23,12 @@ public partial struct CountDrawSystem : ISystem
             SceneManager.LoadScene("GameClearScene");
         }
 
+        var titleData = SystemAPI.GetSingleton<TitleConfigData>();
+        if(!titleData.isDisplayEntitiesCount)
+        {
+            return;
+        }
+
         countData.SetEnemyCountText();
         countData.SetBulletCountText();
     }

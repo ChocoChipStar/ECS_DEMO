@@ -4,7 +4,6 @@ public partial struct TitleConfigDataSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
-        state.Enabled = true;
         state.RequireForUpdate<TitleConfigData>();
     }
 
@@ -15,7 +14,9 @@ public partial struct TitleConfigDataSystem : ISystem
             configData.ValueRW.spawnCount = ConfigUIController.SpawnCount;
             configData.ValueRW.isUseEffects = ConfigUIController.IsUseEffects;
             configData.ValueRW.isDisplayEntitiesCount = ConfigUIController.IsDisplayEntitiesCount;
+            configData.ValueRW.isDisplayFPS = ConfigUIController.IsDisplayFPS;
             configData.ValueRW.isSpawnLoop = ConfigUIController.IsSpawnLoop;
+            configData.ValueRW.isPlayerHP = ConfigUIController.IsPlayerHP;
         }
 
         state.Enabled = false;

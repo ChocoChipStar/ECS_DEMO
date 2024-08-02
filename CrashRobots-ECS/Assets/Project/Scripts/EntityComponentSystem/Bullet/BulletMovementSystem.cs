@@ -28,10 +28,11 @@ public partial struct BulletMovementSystem : ISystem
 
         var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
         var entityCommandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+        var deltaTime = SystemAPI.Time.DeltaTime;
         foreach (var (localToWorld, transform, bulletData, entity) in SystemAPI.Query<RefRO<LocalToWorld>, RefRW<LocalTransform>, RefRO<BulletParamsData>>().WithEntityAccess())
         {
             var position = transform.ValueRO.Position;
-            position += bulletData.ValueRO.direction * bulletData.ValueRO.bulletSpeed * SystemAPI.Time.DeltaTime;
+            position += bulletData.ValueRO.direction * bulletData.ValueRO.bulletSpeed * deltaTime;
             transform.ValueRW.Position = position;
 
             if (math.distance(playerPos, transform.ValueRO.Position) >= DestroyBoarder)
