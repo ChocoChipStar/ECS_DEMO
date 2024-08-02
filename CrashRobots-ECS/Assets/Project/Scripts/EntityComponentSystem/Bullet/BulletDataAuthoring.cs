@@ -9,11 +9,14 @@ public class BulletDataAuthoring : MonoBehaviour
     {
         public override void Bake(BulletDataAuthoring authoring)
         {
-            var bulletData = new PrefabData
+            var bulletDataTAG = new BulletDataTAG();
+            AddComponent(GetEntity(TransformUsageFlags.Dynamic), bulletDataTAG);
+
+            var prefabData = new PrefabData
             {
                 bulletPrefabEntity = GetEntity(authoring.bulletPrefab, TransformUsageFlags.Dynamic),
             };
-            AddComponent(GetEntity(TransformUsageFlags.Dynamic), bulletData);
+            AddComponent(GetEntity(TransformUsageFlags.Dynamic), prefabData);
         }
     }
 }

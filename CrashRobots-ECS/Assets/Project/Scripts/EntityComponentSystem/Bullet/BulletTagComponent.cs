@@ -10,6 +10,9 @@ public class BulletTagComponent : MonoBehaviour
     {
         public override void Bake(BulletTagComponent authoring)
         {
+            var bulletTAG = new BulletTAG();
+            AddComponent(GetEntity(TransformUsageFlags.Dynamic), bulletTAG);
+
             var paramsData = new BulletParamsData
             {
                 bulletSpeed = authoring.bulletSpeed,
@@ -18,6 +21,8 @@ public class BulletTagComponent : MonoBehaviour
         }
     }
 }
+
+public struct BulletTAG : IComponentData { }
 
 public struct BulletParamsData : IComponentData 
 {
