@@ -31,7 +31,13 @@ public partial struct EnemySpawnSystem : ISystem
 
     private void OnStartRunning(ref SystemState state)
     {
+        // CommandBuffer作成のために必要なシングルトンを取得する
         var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
+        // ecbSingletonからアンマネージドのentityCommandBufferを作成する
+
+        // entityCommandBufferとは
+        // 「エンティティの作成」など、Job処理中に実行できない命令を保持するバッファのこと
+        // チャンク構造の変更が必要な命令は全て、Job処理中に実行できない命令など
         entityCommandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
     }
 
